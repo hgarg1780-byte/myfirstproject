@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Alea · Manufacturing Execution Visibility Layer — Strategic & Architectural Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --ink:        #1c1b18;
+  --ink-2:      #3d3b34;
+  --ink-3:      #6b6860;
+  --ink-4:      #9d9a90;
+  --paper:      #faf9f5;
+  --paper-2:    #f2f0eb;
+  --paper-3:    #e9e6df;
+  --lime:       #8faa00;
+  --lime-light: #b5d000;
+  --lime-tint:  rgba(143,170,0,.09);
+  --lime-line:  rgba(143,170,0,.25);
+  --red-tint:   rgba(185,28,28,.07);
+  --red-line:   rgba(185,28,28,.25);
+  --blue-tint:  rgba(29,78,216,.07);
+  --blue-line:  rgba(29,78,216,.25);
+  --amber-tint: rgba(180,83,9,.07);
+  --amber-line: rgba(180,83,9,.25);
+  --border:     #dedad2;
+  --rule:       #e8e5dd;
+
+  --ff-serif:  'Lora', Georgia, serif;
+  --ff-sans:   'DM Sans', system-ui, sans-serif;
+  --ff-mono:   'JetBrains Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--ff-sans);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LAYOUT ── */
+.page-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 32px 100px;
+}
+
+/* ── COVER ── */
+.cover {
+  padding: 72px 0 56px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+}
+.cover-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.cover-tag {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.cover-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--ink-4); }
+.cover h1 {
+  font-family: var(--ff-serif);
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  line-height: 1.18;
+  color: var(--ink);
+  margin-bottom: 20px;
+  letter-spacing: -.3px;
+}
+.cover h1 em { color: var(--lime); font-style: normal; }
+.cover-sub {
+  font-size: 16px;
+  color: var(--ink-3);
+  max-width: 600px;
+  line-height: 1.65;
+  margin-bottom: 32px;
+}
+.cover-meta {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.cover-meta-item { font-size: 12px; color: var(--ink-4); font-family: var(--ff-mono); }
+.cover-meta-item strong { color: var(--ink-2); }
+
+/* ── TABLE OF CONTENTS ── */
+.toc {
+  background: var(--paper-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 60px;
+}
+.toc-title {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  margin-bottom: 18px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 32px;
+}
+.toc-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--ink-2);
+  font-size: 13.5px;
+  transition: color .12s;
+}
+.toc-item:hover { color: var(--lime); }
+.toc-num {
+  font-family: var(--ff-mono);
+  font-size: 10.5px;
+  color: var(--lime);
+  flex-shrink: 0;
+  min-width: 20px;
+}
+@media(max-width:600px){ .toc-grid{grid-template-columns:1fr;} }
+
+/* ── SECTION ── */
+.section {
+  margin-bottom: 72px;
+  padding-bottom: 56px;
+  border-bottom: 1px solid var(--rule);
+}
+.section:last-child { border-bottom: none; }
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+.section-num {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--lime);
+  letter-spacing: .06em;
+  padding-top: 8px;
+  flex-shrink: 0;
+}
+.section h2 {
+  font-family: var(--ff-serif);
+  font-size: clamp(20px, 2.5vw, 26px);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.25;
+  letter-spacing: -.2px;
+}
+.section h3 {
+  font-family: var(--ff-sans);
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 28px 0 10px;
+  letter-spacing: -.1px;
+}
+.section h3::before {
+  content: '— ';
+  color: var(--lime);
+}
+.section p {
+  color: var(--ink-2);
+  margin-bottom: 14px;
+  font-size: 14.5px;
+}
+.section p:last-child { margin-bottom: 0; }
+
+/* ── CALLOUT BOXES ── */
+.box {
+  border-radius: 10px;
+  padding: 18px 22px;
+  margin: 22px 0;
+  border-left: 4px solid;
+  font-size: 14px;
+  line-height: 1.65;
+}
+.box p { margin-bottom: 8px; font-size: 14px; }
+.box p:last-child { margin-bottom: 0; }
+.box-lime   { background: var(--lime-tint);  border-color: var(--lime); }
+.box-red    { background: var(--red-tint);   border-color: #b91c1c; }
+.box-blue   { background: var(--blue-tint);  border-color: #1d4ed8; }
+.box-amber  { background: var(--amber-tint); border-color: #b45309; }
+.box-title {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.box-lime .box-title   { color: var(--lime); }
+.box-red .box-title    { color: #b91c1c; }
+.box-blue .box-title   { color: #1d4ed8; }
+.box-amber .box-title  { color: #b45309; }
+
+/* ── PILLARS / CARD GRID ── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 22px 0;
+}
+.card {
+  background: var(--paper-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.card-icon { font-size: 20px; margin-bottom: 8px; }
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+.card-desc { font-size: 12.5px; color: var(--ink-3); line-height: 1.55; }
+
+/* ── TABLES ── */
+.tbl-wrap { overflow-x: auto; margin: 22px 0; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+th {
+  background: var(--paper-3);
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--paper-2); }
+td strong { color: var(--ink); font-weight: 600; }
+td code {
+  font-family: var(--ff-mono);
+  font-size: 11.5px;
+  background: var(--paper-3);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--lime);
+}
+
+/* ── CODE / SCHEMA ── */
+.schema-block {
+  background: var(--ink);
+  color: #c9d1d9;
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin: 22px 0;
+  font-family: var(--ff-mono);
+  font-size: 12.5px;
+  line-height: 1.75;
+  overflow-x: auto;
+}
+.schema-block .kw  { color: #ff7b72; }
+.schema-block .fn  { color: #d2a8ff; }
+.schema-block .str { color: #a5d6ff; }
+.schema-block .cmt { color: #6e7681; font-style: italic; }
+.schema-block .val { color: #79c0ff; }
+.schema-block .hl  { color: var(--lime-light); }
+
+/* ── TIMELINE ── */
+.timeline { margin: 22px 0; }
+.tl-item {
+  display: flex;
+  gap: 18px;
+  padding-bottom: 28px;
+  position: relative;
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.tl-item:last-child::before { display: none; }
+.tl-dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--paper-2);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ink-3);
+  flex-shrink: 0;
+}
+.tl-dot.lime { border-color: var(--lime); color: var(--lime); background: var(--lime-tint); }
+.tl-body { flex: 1; padding-top: 4px; }
+.tl-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.tl-desc { font-size: 13px; color: var(--ink-3); line-height: 1.6; }
+
+/* ── RISK TABLE ── */
+.risk-high { color: #b91c1c; font-weight: 600; }
+.risk-med  { color: #b45309; font-weight: 600; }
+.risk-low  { color: #166534; font-weight: 600; }
+
+/* ── NUMBERED LIST ── */
+.num-list { list-style: none; counter-reset: nl; margin: 16px 0; }
+.num-list li {
+  counter-increment: nl;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.num-list li::before {
+  content: counter(nl, decimal-leading-zero);
+  font-family: var(--ff-mono);
+  font-size: 10.5px;
+  color: var(--lime);
+  flex-shrink: 0;
+  padding-top: 3px;
+  min-width: 24px;
+}
+
+/* ── BULLET LIST ── */
+.bullet-list { list-style: none; margin: 14px 0; }
+.bullet-list li {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 9px;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+.bullet-list li::before {
+  content: '›';
+  color: var(--lime);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── DIVIDER ── */
+hr.section-rule { border: none; border-top: 1px solid var(--rule); margin: 32px 0; }
+
+/* ── PRINT ── */
+@media print {
+  .page-wrap { max-width: 100%; padding: 20px; }
+  .cover { padding: 36px 0 28px; }
+  .section { break-inside: avoid; }
+  body { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<!-- ══════════════════════════════════════════
+     COVER
+══════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-eyebrow">
+    <span class="cover-tag">Alea Modular Kitchen</span>
+    <span class="cover-dot"></span>
+    <span class="cover-tag">Strategic Architecture Document</span>
+    <span class="cover-dot"></span>
+    <span class="cover-tag">Confidential</span>
+  </div>
+  <h1>Manufacturing Execution<br/><em>Visibility Layer</em><br/>Strategic &amp; Architectural Analysis</h1>
+  <p class="cover-sub">A deep analysis of the transformation path from Google Sheets–orchestrated operations to a workflow-aware, AI-ready manufacturing execution platform — covering event modeling, SQL backbone design, adoption strategy, and the long-term path to autonomous manufacturing intelligence.</p>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><strong>Scope:</strong> PPC Design Stage · Cross-Department Coordination</div>
+    <div class="cover-meta-item"><strong>Stage:</strong> Visibility Layer → Execution Platform</div>
+    <div class="cover-meta-item"><strong>Horizon:</strong> 18–36 months</div>
+    <div class="cover-meta-item"><strong>Sections:</strong> 10</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TABLE OF CONTENTS
+══════════════════════════════════════════ -->
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <div class="toc-grid">
+    <a href="#s1" class="toc-item"><span class="toc-num">01</span>Validation &amp; Strategic Critique</a>
+    <a href="#s2" class="toc-item"><span class="toc-num">02</span>PPC Pilot Scope Improvements</a>
+    <a href="#s3" class="toc-item"><span class="toc-num">03</span>Design-Stage Event Model</a>
+    <a href="#s4" class="toc-item"><span class="toc-num">04</span>Google Sheets → SQL Migration Risks</a>
+    <a href="#s5" class="toc-item"><span class="toc-num">05</span>SQL as Operational Event Backbone</a>
+    <a href="#s6" class="toc-item"><span class="toc-num">06</span>ERP State ↔ Chat Timeline Sync</a>
+    <a href="#s7" class="toc-item"><span class="toc-num">07</span>Factory Adoption Strategy</a>
+    <a href="#s8" class="toc-item"><span class="toc-num">08</span>Long-Term Architecture Path</a>
+    <a href="#s9" class="toc-item"><span class="toc-num">09</span>Failure Modes &amp; Anti-Patterns</a>
+    <a href="#s10" class="toc-item"><span class="toc-num">10</span>AI Agent Ecosystem Architecture</a>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — VALIDATION & CRITIQUE
+══════════════════════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2>Validation &amp; Strategic Critique of the Transformation Approach</h2>
+  </div>
+
+  <p>The approach is structurally sound and reflects hard-won lessons from manufacturing digitization failures. The decision to <strong>not attempt immediate ERP replacement</strong> is the single most important strategic choice made here — and it is correct. Traditional ERP implementations at make-to-order manufacturers in the SME segment fail at a rate exceeding 60%, almost always because they attempt to replace operational behavior before operational intelligence has been built. What Alea is doing instead — inserting a visibility layer that runs <em>alongside</em> existing workflows — is the defensible path.</p>
+
+  <h3>What the approach gets right</h3>
+  <p>The framing of Google FMS as the "upstream operational source" rather than a legacy system to be destroyed is tactically brilliant. It acknowledges the behavioral reality that spreadsheets persist not because they are technically superior but because they have accumulated years of informal process intelligence that lives in cell formulas, tab structures, and the mental models of the people using them. Preserving that source while building a structured event layer on top of it is the correct sequencing.</p>
+  <p>The identification of WhatsApp as the symptom rather than the cause is also accurate. The real dysfunction is not the messaging tool — it is the absence of a <strong>structured operational state machine</strong>. WhatsApp filled that vacuum because nothing else offered the speed and ubiquity it does. Any replacement must compete on those same dimensions while adding structured workflow capture that WhatsApp cannot provide. The prototype's real-time chat architecture correctly addresses the speed requirement.</p>
+
+  <h3>Strategic gaps to address</h3>
+  <div class="box box-amber">
+    <div class="box-title">⚠ Critical Gap — Workflow State Ownership</div>
+    <p>The current framing treats the visibility layer primarily as a <em>communication improvement</em>. This understates the architectural goal. What you are actually building is a <strong>workflow state machine with communication as its interface</strong>. The distinction matters because it determines what data you design for. Communication-first design produces better chat. Workflow-state-first design produces dispatch reliability, which is the metric that matters to your business.</p>
+  </div>
+
+  <div class="box box-amber">
+    <div class="box-title">⚠ Critical Gap — Conflict Model for Dual Sources of Truth</div>
+    <p>Running Google FMS alongside a SQL event store creates two operational sources of truth. Without an explicit conflict model — defining which system wins when they disagree, under what conditions, and through what resolution process — this duality will generate confusion within six weeks of live operation. You need a <strong>sovereignty boundary</strong>: a clear definition of what Google FMS owns, what SQL owns, and what neither owns until explicitly migrated.</p>
+  </div>
+
+  <h3>The correct framing for internal alignment</h3>
+  <p>The most effective way to build internal support for this transformation is to frame it around a single verifiable outcome: <strong>dispatch date reliability</strong>. Everyone in the organization — Sales, Design, PPC, Production — understands what a missed delivery means. Every architectural decision in this visibility layer should be evaluated against whether it improves the predictability of the date on which an order reaches the production floor. This anchors technical decisions to a business metric and prevents scope creep into features that feel useful but do not move dispatch reliability.</p>
+
+  <div class="box box-lime">
+    <div class="box-title">✓ Strategic Validation</div>
+    <p>The three-layer architecture (Sheets as source → SQL as event backbone → chat + dashboards as interface) is the correct mental model. The pilot focus on design-stage workflow is the correct entry point — it is where variability is highest, waiting states are least visible, and clarification loops cost the most elapsed time. Nail the design-stage event model and every subsequent stage integration becomes a template exercise.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — PPC PILOT SCOPE
+══════════════════════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2>Suggested Improvements to PPC Pilot Scope</h2>
+  </div>
+
+  <p>The current pilot scope is feature-complete but <strong>not signal-complete</strong>. You have defined the right categories of work but have not defined the specific operational signals that will tell you whether the pilot is succeeding. Without those signals, you will run the pilot for three months and have a debate about whether it "worked" rather than knowing definitively what changed.</p>
+
+  <h3>Add explicit success metrics before launch</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Current Baseline (estimate)</th>
+          <th>Pilot Target</th>
+          <th>How to Measure</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Design clarification loop count</strong></td>
+          <td>Unknown — no structured data</td>
+          <td>Reduce by 30%</td>
+          <td>Count CLARIFICATION_REQUESTED events per order in SQL</td>
+        </tr>
+        <tr>
+          <td><strong>Design-stage lead time</strong></td>
+          <td>2 hrs – 1 day (high variance)</td>
+          <td>Reduce variance, not just average</td>
+          <td>Time between ASSIGNED and DESIGN_COMPLETE events</td>
+        </tr>
+        <tr>
+          <td><strong>Hidden waiting time</strong></td>
+          <td>Unmeasured</td>
+          <td>100% explicit — every wait has a tag</td>
+          <td>Sum of time in WAITING_* states per order</td>
+        </tr>
+        <tr>
+          <td><strong>Overload misreporting</strong></td>
+          <td>Frequent — no audit trail</td>
+          <td>All capacity claims auditable</td>
+          <td>Assigned workload vs. completed workload per designer per week</td>
+        </tr>
+        <tr>
+          <td><strong>Silent delay rate</strong></td>
+          <td>Unknown</td>
+          <td>Zero silent delays</td>
+          <td>Count of deadline breaches without a preceding DELAY_REASON event</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Scope additions that will dramatically increase pilot value</h3>
+
+  <p><strong>Clarification dependency graph.</strong> The clarification loop between Sales, 2D, and Pytha is the biggest elapsed-time sink in your design stage. The pilot should not just tag clarification states — it should capture the <em>dependency graph</em>: who is waiting for whom, for what specific information, since when. This turns a status indicator into a coordination protocol. When a designer tags a clarification request, they should be required to specify the type (dimension query / material query / client preference / approval) and the responsible party. This makes the dependency explicit, creates accountability, and generates data that will later train your AI delay predictor.</p>
+
+  <p><strong>Capacity registration, not just assignment.</strong> The current scope includes designer assignment. This is necessary but insufficient. What you actually need is a <strong>daily capacity declaration</strong>: each designer explicitly registers their available design hours at the start of each day. When an order is assigned, the system subtracts from that capacity. This does three things simultaneously: it prevents overload by making invisible work visible, it creates an audit trail for misreporting claims, and it generates the time-series data required for future capacity planning models.</p>
+
+  <p><strong>Attachment provenance events.</strong> Your pilot mentions attachment lifecycle automation. Extend this to capture <em>provenance</em>: which version of which file was attached, by whom, at what workflow stage, and whether it was superseded. The failure mode you are trying to prevent is production working from an outdated design file. The prevention mechanism is not folder management — it is version authority: each order has exactly one authoritative file per artifact type, with an explicit versioning event whenever it changes.</p>
+
+  <div class="box box-blue">
+    <div class="box-title">📐 Scope Reduction Recommendation</div>
+    <p>Remove the PPC control tower dashboard from the pilot scope. Build the event model and the chat interface first. Dashboards built before the event model matures will misrepresent the data and create false confidence. The dashboard should be Phase 2, built after four weeks of live event data has validated the event taxonomy. A premature dashboard that shows wrong numbers is worse than no dashboard.</p>
+  </div>
+
+  <h3>Recommended pilot phasing</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot lime">W1</div>
+      <div class="tl-body">
+        <div class="tl-title">Event taxonomy finalization + designer onboarding</div>
+        <div class="tl-desc">Lock the event schema. Train two designers. Run in parallel with existing WhatsApp workflow — no behavioral change required yet.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot lime">W2</div>
+      <div class="tl-body">
+        <div class="tl-title">Structured events replace WhatsApp status updates</div>
+        <div class="tl-desc">Assignment, clarification, completion events become mandatory for the two pilot designers. WhatsApp still permitted for informal communication. Collect baseline data.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot lime">W3–4</div>
+      <div class="tl-body">
+        <div class="tl-title">Capacity registration + delay reason tagging</div>
+        <div class="tl-desc">Add daily capacity declarations and mandatory delay reason tagging. Begin measuring against success metrics defined above.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot lime">W5–6</div>
+      <div class="tl-body">
+        <div class="tl-title">Expand to all design-stage participants + PPC review</div>
+        <div class="tl-desc">Full design team on the system. PPC begins using the chat thread as the primary coordination surface. Weekly structured review of metrics.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">W7–8</div>
+      <div class="tl-body">
+        <div class="tl-title">Dashboard construction + pilot retrospective</div>
+        <div class="tl-desc">Build the control tower dashboard against real event data. Conduct pilot retrospective. Define Phase 2 scope (production-stage integration).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — EVENT MODEL
+══════════════════════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2>Recommended Event Model for Design-Stage Workflow Tracking</h2>
+  </div>
+
+  <p>The event model is the most consequential architectural decision in this entire system. Get it wrong and you will spend six months generating data that cannot answer any operational question. Get it right and every future capability — dashboards, AI prediction, escalation automation — becomes a query or a model trained on clean, semantically rich events.</p>
+
+  <h3>Design principles for your event taxonomy</h3>
+  <p>Events must be <strong>immutable facts, not mutable states</strong>. The difference is critical. A mutable state says "this order is currently in design." An immutable event says "at 10:42 AM on this date, Sudhanshu was assigned this order." The first can be overwritten and loses history. The second is permanent and builds a complete audit trail. Your SQL event store must be append-only for the event log — state is always <em>derived</em> from the latest relevant event, never stored independently.</p>
+  <p>Events must be <strong>causally attributed</strong>. Every event has an actor (who triggered it), an object (which order), a timestamp, and optionally a cause (which prior event or external trigger prompted this event). Causal attribution is what makes the event log analyzable rather than just observable.</p>
+  <p>Events must be <strong>semantically specific</strong>. The failure mode is creating a generic event type (e.g., "STATUS_CHANGED") with a payload field that holds a string value. This is a state database disguised as an event store. Every distinct transition in the design workflow should have its own event type.</p>
+
+  <h3>Core design-stage event taxonomy</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Event Type</th>
+          <th>Trigger</th>
+          <th>Required Fields</th>
+          <th>Derived State</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>ORDER_DESIGN_QUEUED</code></td>
+          <td>PPC adds order to design queue</td>
+          <td>order_id, priority_tier, sales_handoff_by</td>
+          <td>QUEUED</td>
+        </tr>
+        <tr>
+          <td><code>DESIGNER_ASSIGNED</code></td>
+          <td>PPC assigns designer</td>
+          <td>order_id, designer_id, assignment_type (2D/Pytha/both), planned_completion_at</td>
+          <td>ASSIGNED</td>
+        </tr>
+        <tr>
+          <td><code>DESIGN_STARTED</code></td>
+          <td>Designer begins work (explicit declaration)</td>
+          <td>order_id, designer_id, actual_start_at</td>
+          <td>IN_PROGRESS</td>
+        </tr>
+        <tr>
+          <td><code>CLARIFICATION_REQUESTED</code></td>
+          <td>Designer needs information to proceed</td>
+          <td>order_id, requesting_designer_id, clarification_type, waiting_for_party, question_summary</td>
+          <td>WAITING_CLARIFICATION</td>
+        </tr>
+        <tr>
+          <td><code>CLARIFICATION_PROVIDED</code></td>
+          <td>Responding party supplies the information</td>
+          <td>order_id, responding_party_id, clarification_request_event_id</td>
+          <td>IN_PROGRESS (resumed)</td>
+        </tr>
+        <tr>
+          <td><code>CORRECTION_REQUESTED</code></td>
+          <td>2D design requires rework before Pytha</td>
+          <td>order_id, requested_by, correction_reason_code, correction_detail</td>
+          <td>WAITING_CORRECTION</td>
+        </tr>
+        <tr>
+          <td><code>CORRECTION_COMPLETE</code></td>
+          <td>Rework submitted</td>
+          <td>order_id, corrected_by, correction_request_event_id</td>
+          <td>IN_PROGRESS</td>
+        </tr>
+        <tr>
+          <td><code>DESIGN_DELAYED</code></td>
+          <td>Planned completion will be missed</td>
+          <td>order_id, delay_reason_code, expected_delay_hours, responsible_party, declared_by</td>
+          <td>DELAYED</td>
+        </tr>
+        <tr>
+          <td><code>DESIGN_COMPLETE</code></td>
+          <td>Designer marks design as finished</td>
+          <td>order_id, designer_id, completion_type (2D_only/Pytha_only/both), artifact_ids[]</td>
+          <td>DESIGN_COMPLETE</td>
+        </tr>
+        <tr>
+          <td><code>DESIGN_APPROVAL_REQUESTED</code></td>
+          <td>Design sent for client/sales approval</td>
+          <td>order_id, submitted_by, approval_deadline</td>
+          <td>PENDING_APPROVAL</td>
+        </tr>
+        <tr>
+          <td><code>DESIGN_APPROVED</code></td>
+          <td>Approval received</td>
+          <td>order_id, approved_by, approval_source (client/internal)</td>
+          <td>APPROVED</td>
+        </tr>
+        <tr>
+          <td><code>DESIGN_REJECTED</code></td>
+          <td>Design requires revision post-approval submission</td>
+          <td>order_id, rejected_by, rejection_reason, revision_count</td>
+          <td>IN_REVISION</td>
+        </tr>
+        <tr>
+          <td><code>CUTTING_LIST_READY</code></td>
+          <td>Production-ready cutting list generated</td>
+          <td>order_id, generated_by, list_artifact_id, requires_production_review</td>
+          <td>READY_FOR_PRODUCTION</td>
+        </tr>
+        <tr>
+          <td><code>DESIGN_HANDED_TO_PRODUCTION</code></td>
+          <td>PPC confirms handoff to production floor</td>
+          <td>order_id, handoff_by, production_schedule_date, attachment_ids[]</td>
+          <td>PRODUCTION_QUEUED</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Clarification type taxonomy</h3>
+  <p>The <code>CLARIFICATION_REQUESTED</code> event's <code>clarification_type</code> field should be a controlled vocabulary, not a free text field. Suggested taxonomy based on common modular kitchen design blockers:</p>
+
+  <div class="card-grid">
+    <div class="card"><div class="card-title">DIM_QUERY</div><div class="card-desc">Site dimension ambiguity — wall measurement, height, depth clearance</div></div>
+    <div class="card"><div class="card-title">MATERIAL_QUERY</div><div class="card-desc">Material or finish specification unclear or conflicting</div></div>
+    <div class="card"><div class="card-title">CLIENT_PREF</div><div class="card-desc">Design decision requires client preference not yet captured</div></div>
+    <div class="card"><div class="card-title">SCOPE_CHANGE</div><div class="card-desc">Customer-initiated design change after briefing</div></div>
+    <div class="card"><div class="card-title">SALES_MISSING_INFO</div><div class="card-desc">Sales handoff incomplete — key data not provided</div></div>
+    <div class="card"><div class="card-title">APPROVAL_PENDING</div><div class="card-desc">Formal approval required before proceeding</div></div>
+  </div>
+
+  <div class="box box-lime">
+    <div class="box-title">✓ Architectural Principle — Derived State</div>
+    <p>The "current status" of an order in design should never be stored as a mutable column. It should always be derived from the event log by reading the most recent terminal event and computing the state it implies. This prevents state/event divergence (the classic ERP corruption problem), ensures the audit trail is always complete, and makes historical state reconstruction trivial for any point in time.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — GOOGLE SHEETS → SQL RISKS
+══════════════════════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2>Risks &amp; Mitigations for Mirroring Google Sheets into SQL</h2>
+  </div>
+
+  <p>The Google Sheets → SQL mirroring is the highest-risk technical decision in the transformation. It is also unavoidable if you want to maintain operational continuity. The risks are not primarily technical — they are semantic, temporal, and behavioral.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Risk Category</th>
+          <th>Severity</th>
+          <th>Description</th>
+          <th>Mitigation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Schema drift</strong></td>
+          <td class="risk-high">HIGH</td>
+          <td>Sheets columns are renamed, reordered, or added without notice. Sync breaks silently or worse — populates wrong SQL fields with wrong data.</td>
+          <td>Build a <strong>schema contract layer</strong>: a named column-mapping configuration that lives in code, versioned, with an explicit alert when a Sheets column name changes. Never map by column index, always by column header name.</td>
+        </tr>
+        <tr>
+          <td><strong>Semantic ambiguity</strong></td>
+          <td class="risk-high">HIGH</td>
+          <td>The same cell value means different things depending on which person filled it, which week it was, or which tab it is on. SQL will store this as fact. Your queries will lie.</td>
+          <td>Create a <strong>controlled vocabulary map</strong> before sync begins. For each status field in Sheets, document every observed value and its canonical SQL equivalent. Treat unrecognized values as parse errors, not data.</td>
+        </tr>
+        <tr>
+          <td><strong>Temporal gaps</strong></td>
+          <td class="risk-high">HIGH</td>
+          <td>Sheets is updated manually, sometimes days late. SQL will reflect the update time, not the event time. Your event timeline will be systematically wrong.</td>
+          <td>Mirror Sheets data to SQL with both <code>sheet_updated_at</code> (when the cell changed) and <code>sync_captured_at</code> (when your sync ran) — but never treat either as the true operational timestamp. For events that matter, require explicit time declaration from the actor.</td>
+        </tr>
+        <tr>
+          <td><strong>Phantom updates</strong></td>
+          <td class="risk-med">MEDIUM</td>
+          <td>Someone corrects a historical Sheets row — backdating a status, fixing a typo in a client name. Your SQL mirror records this as a current change, potentially invalidating historical analysis.</td>
+          <td>Implement <strong>change detection with row history</strong>: every time a Sheets row changes, store the full previous row state in a <code>sheet_row_audit</code> table before overwriting the mirror. Never allow SQL mirror rows to delete — only append versions.</td>
+        </tr>
+        <tr>
+          <td><strong>IMPORTRANGE cascade failure</strong></td>
+          <td class="risk-med">MEDIUM</td>
+          <td>Your FMS uses IMPORTRANGE integrations. These occasionally fail silently, causing source data to become stale or blank. Your sync will mirror the stale data as ground truth.</td>
+          <td>Add a <strong>staleness detector</strong>: track the last-modified timestamp of source sheets. If a source sheet has not changed in an anomalously long time (configurable threshold), raise an alert. Never treat silence as correctness.</td>
+        </tr>
+        <tr>
+          <td><strong>Dual-write conflicts</strong></td>
+          <td class="risk-high">HIGH</td>
+          <td>As the SQL system gains adoption, people will update status in chat/SQL while others still update the Sheets. Both sources will claim to be correct. This creates operational confusion that erodes trust in both systems.</td>
+          <td>Define and enforce a <strong>sovereignty timeline</strong>: designate specific data fields that migrate exclusively to SQL at specific milestones. Communicate these boundaries explicitly. Once a field is owned by SQL, display the SQL value in Sheets (not the other way around) using an Apps Script formula.</td>
+        </tr>
+        <tr>
+          <td><strong>Sync latency</strong></td>
+          <td class="risk-low">LOW</td>
+          <td>Google Sheets API has rate limits (60 read requests per minute). High-volume polling will either hit these limits or create unacceptably stale data.</td>
+          <td>Use <strong>event-triggered sync</strong> via Google Apps Script <code>onChange</code> triggers rather than time-based polling. Push changes to your backend via webhook rather than your backend pulling. Cache aggressively for non-critical reads.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="box box-red">
+    <div class="box-title">⛔ Anti-Pattern Warning — Treating the Mirror as the System</div>
+    <p>The biggest risk is not any of the technical failures above — it is the organizational tendency to begin treating the Sheets mirror in SQL as the primary operational record before it has actually earned that status. This happens when dashboards built on the SQL mirror start informing decisions, teams stop checking Sheets, and then a sync failure or semantic error corrupts a week of operational data. The mirror is a <strong>read replica for observation, not an operational source of truth</strong>, until you have explicitly retired the corresponding Sheets fields. Treat it accordingly in every dashboard label, every query comment, and every team communication.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 5 — SQL AS EVENT BACKBONE
+══════════════════════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2>Designing SQL as an Operational Event Backbone</h2>
+  </div>
+
+  <p>The distinction between SQL as storage and SQL as an operational event backbone is not a technical distinction — it is a design philosophy that determines the kind of intelligence the system can produce. Storage asks: "What is the current value of this field?" A backbone asks: "What has happened to this order, in what sequence, by whom, and what does the pattern of those events tell us?"</p>
+
+  <h3>The three-table core</h3>
+  <p>The backbone requires at minimum three foundational tables. Everything else is derived from these:</p>
+
+  <div class="schema-block">
+<span class="cmt">-- 1. ORDERS — immutable anchor for everything else</span>
+<span class="kw">CREATE TABLE</span> orders (
+  order_id        <span class="val">UNIQUEIDENTIFIER</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">NEWID</span>(),
+  sch_no          <span class="val">NVARCHAR</span>(<span class="val">50</span>)  <span class="kw">NOT NULL UNIQUE</span>, <span class="cmt">-- your existing identifier</span>
+  client_name     <span class="val">NVARCHAR</span>(<span class="val">200</span>) <span class="kw">NOT NULL</span>,
+  created_at      <span class="val">DATETIMEOFFSET</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">SYSDATETIMEOFFSET</span>(),
+  created_by      <span class="val">UNIQUEIDENTIFIER</span> <span class="kw">NOT NULL</span>,
+  <span class="cmt">-- Immutable after creation. Changes tracked via ORDER_AMENDED events only.</span>
+);
+
+<span class="cmt">-- 2. ORDER_EVENTS — the append-only event log (never UPDATE, never DELETE)</span>
+<span class="kw">CREATE TABLE</span> order_events (
+  event_id        <span class="val">UNIQUEIDENTIFIER</span> <span class="kw">PRIMARY KEY DEFAULT</span> <span class="fn">NEWID</span>(),
+  order_id        <span class="val">UNIQUEIDENTIFIER</span> <span class="kw">NOT NULL REFERENCES</span> orders(order_id),
+  event_type      <span class="val">NVARCHAR</span>(<span class="val">80</span>)   <span class="kw">NOT NULL</span>, <span class="cmt">-- e.g. 'DESIGNER_ASSIGNED'</span>
+  event_at        <span class="val">DATETIMEOFFSET</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">SYSDATETIMEOFFSET</span>(),
+  actor_id        <span class="val">UNIQUEIDENTIFIER</span> <span class="kw">NOT NULL</span>, <span class="cmt">-- who triggered this</span>
+  cause_event_id  <span class="val">UNIQUEIDENTIFIER</span> <span class="kw">NULL</span>,      <span class="cmt">-- which prior event caused this</span>
+  payload         <span class="val">NVARCHAR</span>(<span class="val">MAX</span>)   <span class="kw">NOT NULL</span>, <span class="cmt">-- JSON: event-specific fields</span>
+  source          <span class="val">NVARCHAR</span>(<span class="val">20</span>)   <span class="kw">NOT NULL</span>, <span class="cmt">-- 'chat', 'sheets_mirror', 'api', 'system'</span>
+  <span class="cmt">-- Index on (order_id, event_at) for timeline queries</span>
+  <span class="cmt">-- Index on (event_type, event_at) for aggregate analysis</span>
+);
+
+<span class="cmt">-- 3. ORDER_STATE — materialized view of current derived state (WRITE-THROUGH CACHE)</span>
+<span class="cmt">-- Never the source of truth. Always derived. Rebuilt via projection on demand.</span>
+<span class="kw">CREATE TABLE</span> order_state (
+  order_id        <span class="val">UNIQUEIDENTIFIER</span> <span class="kw">PRIMARY KEY REFERENCES</span> orders(order_id),
+  current_status  <span class="val">NVARCHAR</span>(<span class="val">50</span>)   <span class="kw">NOT NULL</span>,
+  assigned_to     <span class="val">UNIQUEIDENTIFIER</span> <span class="kw">NULL</span>,
+  entered_status_at <span class="val">DATETIMEOFFSET</span> <span class="kw">NOT NULL</span>,
+  last_event_id   <span class="val">UNIQUEIDENTIFIER</span> <span class="kw">NOT NULL</span>,
+  projected_at    <span class="val">DATETIMEOFFSET</span> <span class="kw">NOT NULL DEFAULT</span> <span class="fn">SYSDATETIMEOFFSET</span>()
+);
+  </div>
+
+  <h3>Projection functions — deriving state from events</h3>
+  <p>The <code>order_state</code> table is maintained by a <strong>projection function</strong> — a deterministic function that reads the event log for an order and computes the current state. This function runs whenever a new event is written. The key constraint: the projection function must be <em>pure</em> — given the same event stream, it always produces the same state. No side effects, no dependencies on external state.</p>
+
+  <h3>Event sourcing for operational intelligence</h3>
+  <p>The event model enables queries that are impossible in a state-based system. Examples of the operational intelligence this unlocks:</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">⏱</div>
+      <div class="card-title">Time-in-state analysis</div>
+      <div class="card-desc">Average time between DESIGNER_ASSIGNED and DESIGN_STARTED broken down by designer — reveals response time patterns.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">Clarification loop frequency</div>
+      <div class="card-desc">Count of CLARIFICATION_REQUESTED events per order, grouped by clarification_type and sales rep — identifies systemic handoff quality issues.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚧</div>
+      <div class="card-title">Delay attribution</div>
+      <div class="card-desc">Aggregate DESIGN_DELAYED events by delay_reason_code and responsible_party — exposes systemic bottlenecks vs. one-off issues.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Capacity vs. actuals</div>
+      <div class="card-desc">Compare DESIGNER_ASSIGNED workload against DESIGN_COMPLETE output per designer per week — quantifies overload and misreporting.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Revision rate by sales rep</div>
+      <div class="card-desc">DESIGN_REJECTED events with revision_count grouped by the originating sales rep — identifies briefing quality issues at the source.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <div class="card-title">Lead time prediction inputs</div>
+      <div class="card-desc">Historical elapsed time between QUEUED and CUTTING_LIST_READY by order complexity profile — foundation for AI prediction models.</div>
+    </div>
+  </div>
+
+  <h3>The payload discipline problem</h3>
+  <p>Using <code>NVARCHAR(MAX)</code> JSON for the payload field creates flexibility but invites schema anarchy. Enforce payload schema validation at the application layer, not the database layer. Every event type should have a corresponding payload schema defined in your application code. Write an integration test for every event type that validates its payload against its schema. The database stores whatever you give it — your application must enforce the contract.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 6 — ERP STATE / CHAT SYNC
+══════════════════════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2>Synchronization Between ERP State and Chat Timelines</h2>
+  </div>
+
+  <p>This is an architectural challenge that most teams underestimate. Chat threads and workflow events look like the same thing — both are timestamped records associated with an order — but they serve fundamentally different purposes and must be stored, queried, and displayed differently.</p>
+
+  <h3>The duality problem</h3>
+  <p>Chat messages are <strong>conversational artifacts</strong> — informal, high-frequency, human-readable, context-dependent. Workflow events are <strong>operational facts</strong> — structured, authoritative, machine-readable, causally linked. Storing them in the same table is the path to chaos. Displaying them in the same timeline is the path to clarity. The architecture must maintain the separation in storage while providing the unification in display.</p>
+
+  <h3>Recommended synchronization architecture</h3>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Storage</th>
+          <th>What Goes Here</th>
+          <th>Query Characteristic</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Chat layer</strong></td>
+          <td><code>messages</code> table</td>
+          <td>Typed chat messages (comment, update, issue, query, blocker) with sender, timestamp, message_type</td>
+          <td>High-write, high-read, ordered by timestamp, no aggregation needed</td>
+        </tr>
+        <tr>
+          <td><strong>Event layer</strong></td>
+          <td><code>order_events</code> table</td>
+          <td>Structured workflow transitions — assignments, clarifications, completions, delays</td>
+          <td>Moderate-write, analytical reads, aggregation-heavy, causally linked</td>
+        </tr>
+        <tr>
+          <td><strong>Timeline layer</strong></td>
+          <td>Computed view / API</td>
+          <td>Merged and sorted chronological stream of both messages and events for display</td>
+          <td>Read-only derived view. Never stored — always computed on request for a given order</td>
+        </tr>
+        <tr>
+          <td><strong>State layer</strong></td>
+          <td><code>order_state</code> table</td>
+          <td>Current derived status — projected from event log on every new event</td>
+          <td>Low-write (triggered by events), high-read, single-row-per-order access pattern</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The unified timeline API pattern</h3>
+  <p>When the frontend requests an order's thread, the API should return a unified timeline object that merges messages and events. Each timeline entry has a discriminator field indicating whether it is a <code>message</code> or an <code>event</code>, and the frontend renders them differently — chat bubbles for messages, workflow milestone markers for events.</p>
+  <p>This unified timeline is computed server-side as a merge-sort of the two streams by timestamp. It is never stored as a materialized object. Caching at the API level for non-real-time views is acceptable, but the canonical answer is always recomputed from the two source tables.</p>
+
+  <h3>Event-triggered chat injections</h3>
+  <p>One of the highest-value design patterns in this architecture is the <strong>system message</strong>: when a workflow event is recorded in the event layer, the system automatically injects a structured notification into the order's chat thread. This creates a passive ambient awareness — team members who are in a chat thread see workflow state changes without needing to check a separate dashboard.</p>
+  <p>Examples of system-injected messages:</p>
+  <ul class="bullet-list">
+    <li>When <code>DESIGNER_ASSIGNED</code> fires: "🎯 This order has been assigned to [Designer] · Planned completion: [date]"</li>
+    <li>When <code>CLARIFICATION_REQUESTED</code> fires: "⏸ Design on hold — [Designer] is waiting for [clarification_type] from [responsible_party]"</li>
+    <li>When <code>DESIGN_DELAYED</code> fires: "⚠️ Delay declared — [delay_reason_code] · New expected completion: [date] · Declared by: [actor]"</li>
+    <li>When <code>CUTTING_LIST_READY</code> fires: "✅ Cutting list ready — order is cleared for production handoff"</li>
+  </ul>
+
+  <div class="box box-blue">
+    <div class="box-title">📐 Synchronization Guarantee</div>
+    <p>The system message injection must be <strong>transactional with the event write</strong>. If the event is written but the system message fails, you have a workflow state change that is invisible in the chat. Wrap both writes in a database transaction, or use an outbox pattern where system message generation is a guaranteed side-effect of event persistence. Never allow them to diverge.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 7 — ADOPTION STRATEGY
+══════════════════════════════════════════ -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2>Adoption Strategy for Factory Environments</h2>
+  </div>
+
+  <p>Manufacturing adoption failures are almost never technology failures. They are trust failures. The workers who must change their behavior have no reason to trust that the new system will be better for them personally — and until they have experienced that it is, their rational response is to maintain the familiar workflow in parallel, which defeats the purpose of the new system.</p>
+
+  <h3>The fundamental adoption contract</h3>
+  <p>Every person whose workflow changes must receive a clear answer to: <em>"What do I get out of this that I didn't have before?"</em> The answer cannot be "management visibility" — that is management's benefit, not theirs. The answer for designers must be something like: "When you tag a clarification request, the system automatically notifies the responsible party and you stop being blamed for delays caused by someone else's silence." This is a genuine improvement in the designer's working life. Lead with that.</p>
+
+  <h3>The four-phase adoption framework</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot lime">P1</div>
+      <div class="tl-body">
+        <div class="tl-title">Phase 1 — Parallel observation (no behavioral change required)</div>
+        <div class="tl-desc">Run the system in read-only mode for two weeks. The system observes what happens in WhatsApp and Sheets but asks nothing of workers. This builds familiarity without friction and generates the baseline data against which improvement will be measured. Critical: do not monitor or evaluate anyone during this phase. This phase is about the system learning, not the system judging.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot lime">P2</div>
+      <div class="tl-body">
+        <div class="tl-title">Phase 2 — Voluntary structured events (additive only)</div>
+        <div class="tl-desc">Ask two to three enthusiastic early adopters to use the structured event system. WhatsApp is still the default for everyone else. The early adopters get visible recognition — their work shows up in the dashboard, their clarification requests are trackable, their response times are logged. Make the benefit visible to others. Do not mandate anything for anyone who hasn't volunteered.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot lime">P3</div>
+      <div class="tl-body">
+        <div class="tl-title">Phase 3 — Structured events become the default for new orders</div>
+        <div class="tl-desc">Existing orders complete on WhatsApp. All new orders enter the system from Day 1. This avoids migration friction entirely. Within four to six weeks, the majority of active work is in the structured system organically, simply because all new work flows through it. The WhatsApp workflow atrophies naturally rather than being forcibly replaced.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">P4</div>
+      <div class="tl-body">
+        <div class="tl-title">Phase 4 — Legacy WhatsApp workflow retired</div>
+        <div class="tl-desc">Once 80% of active orders are in the structured system, the informal WhatsApp workflow can be formally retired. By this point it will have atrophied on its own — this step is administrative acknowledgment of what has already happened. Celebrate this milestone publicly within the team.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Specific anti-friction design requirements</h3>
+  <ul class="bullet-list">
+    <li><strong>Mobile-first for production and installation floor workers.</strong> Any interaction that requires a desktop browser will not happen on the production floor. The chat interface must be fully functional and optimized for mobile. Event declarations — particularly delay reasons and completion confirmations — must be accomplishable in three taps or fewer.</li>
+    <li><strong>No new accounts.</strong> Workers already have Google accounts tied to their organization. Authentication should be Google SSO. Creating a new username and password system is a barrier that kills adoption before it starts.</li>
+    <li><strong>Offline tolerance.</strong> Factory floors often have patchy WiFi. The chat client must queue events locally and sync when connectivity returns. Losing a "DESIGN_COMPLETE" declaration because of a five-second WiFi dropout will destroy trust faster than anything else.</li>
+    <li><strong>No mandatory field overload.</strong> In the first month, require the minimum viable set of structured fields per event type. Add optional fields progressively. If filling out a DESIGN_DELAYED event takes more than 45 seconds, workers will stop doing it and return to WhatsApp.</li>
+    <li><strong>Visible reciprocal value.</strong> When a designer declares a CLARIFICATION_REQUESTED event, the system should immediately notify the responsible party and surface that notification prominently. When the clarification is provided, notify the designer. This creates a feedback loop where structured events produce immediate useful outcomes — faster than sending a WhatsApp message would.</li>
+  </ul>
+
+  <div class="box box-amber">
+    <div class="box-title">⚠ The Monitoring Trap</div>
+    <p>The biggest adoption killer in factory digitization is workers perceiving the new system as surveillance technology. If the first use of the event data is to call out individuals for slow response times or high delay rates, you will permanently brand the system as a management control tool and adoption will collapse. Establish a public policy: event data will be used for process improvement and system design, not individual performance evaluation, for the first twelve months. Enforce it visibly. Trust must be earned before accountability can be enforced.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 8 — LONG-TERM ARCHITECTURE
+══════════════════════════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2>Long-Term Architecture Path</h2>
+  </div>
+
+  <p>The architecture must be designed from the beginning with the full three-horizon evolution in mind, even though you build for Horizon 1 first. Decisions made in Horizon 1 that are inconsistent with Horizon 3 requirements will require expensive rework at exactly the wrong moment — when the system is live, adoption is fragile, and the team is exhausted.</p>
+
+  <h3>Horizon 1 — Manufacturing Execution Visibility Layer (Months 0–12)</h3>
+  <p>The SQL event backbone is built and populated with design-stage events. The chat system with workflow-aware structured messaging is live. The Google Sheets mirror is operational with a defined sovereignty model. The PPC control tower dashboard is showing real data for design-stage orders. Dispatch reliability is measurably improving. This horizon succeeds when the team cannot imagine returning to WhatsApp-only coordination for design-stage orders.</p>
+  <p><strong>Architectural investment that pays forward:</strong> The event schema designed in Horizon 1 must be extensible to all production stages without requiring structural changes. Every event type added in Horizon 2 should be a new entry in the taxonomy, not a schema migration. Design for this explicitly by keeping event types in a configuration layer, not hardcoded in application logic.</p>
+
+  <h3>Horizon 2 — Execution Platform (Months 9–24)</h3>
+  <p>The visibility layer expands across all production stages: cutting, assembly, finishing, installation. The Sheets sovereignty boundary shifts — production scheduling is now owned by SQL, with Sheets serving as a read-only display layer for operations staff still attached to spreadsheets. The attachment lifecycle management is fully automated: folder creation, version tracking, production-floor delivery. Sales-to-design handoff is formalized with structured onboarding events that replace the informal WhatsApp brief.</p>
+  <p><strong>Key capability unlocked in Horizon 2:</strong> Cross-stage dependency tracking. An order in installation cannot proceed if the site measurement event has not been captured. The event backbone enforces this through precondition checking — a <code>PRODUCTION_STARTED</code> event is rejected if <code>DESIGN_APPROVED</code> has not been recorded. This is workflow enforcement, not just visibility, and it is what converts the system from a reporting tool to an execution platform.</p>
+
+  <h3>Horizon 3 — AI-Driven Manufacturing System (Months 18–36)</h3>
+  <p>AI agents operate on the event backbone to provide predictive and prescriptive intelligence. The event store by this point contains 12–18 months of rich operational history — every order, every delay, every clarification loop, every capacity declaration, every revision. This is the training data that makes the AI agents genuinely useful rather than generically approximate.</p>
+  <p>The architecture at Horizon 3 looks like a <strong>graph of operational intelligence</strong>: the SQL event backbone is the data layer, a set of domain-specific AI agents are the reasoning layer, and the chat + dashboards remain the interface layer. The agents do not replace human judgment — they surface information that would otherwise require a human to spend 30 minutes pulling together from multiple sources, and they do it in real-time, in the context where the decision is being made.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Horizon</th><th>Primary Capability</th><th>Google Sheets Role</th><th>AI Role</th><th>Success Indicator</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>H1</strong> (0–12m)</td>
+          <td>Design-stage visibility + structured chat</td>
+          <td>Primary ERP source, mirrored to SQL</td>
+          <td>None — data collection only</td>
+          <td>Zero silent delays in design stage</td>
+        </tr>
+        <tr>
+          <td><strong>H2</strong> (9–24m)</td>
+          <td>Full production-stage execution platform</td>
+          <td>Display layer for legacy users</td>
+          <td>Anomaly detection, delay flagging</td>
+          <td>Dispatch date accuracy &gt;90%</td>
+        </tr>
+        <tr>
+          <td><strong>H3</strong> (18–36m)</td>
+          <td>Predictive + prescriptive manufacturing intelligence</td>
+          <td>Retired or archived for historical reference</td>
+          <td>Full agent ecosystem (see Section 10)</td>
+          <td>AI-assisted decision-making for all scheduling decisions</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 9 — FAILURE MODES & ANTI-PATTERNS
+══════════════════════════════════════════ -->
+<div class="section" id="s9">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2>Failure Modes &amp; Anti-Patterns to Avoid</h2>
+  </div>
+
+  <p>Manufacturing ERP transformation has a well-documented failure taxonomy. The following represent the patterns most likely to cause failure specifically in your context and architecture.</p>
+
+  <h3>Anti-pattern 1 — The Big Bang Temptation</h3>
+  <p>After the Horizon 1 pilot succeeds, there will be organizational pressure to expand everything simultaneously — production stage, vendor management, installation tracking, client portal, all at once. This pressure must be actively resisted. The event model, the adoption behaviors, and the data quality disciplines must be proven at each stage before the next is added. <strong>Each expansion is a new change management project, not a technical deployment.</strong> The system can be ready before the people are, and deploying too early destroys the trust built in prior phases.</p>
+
+  <h3>Anti-pattern 2 — The Reporting Tool Mistake</h3>
+  <p>The visibility layer will begin generating interesting dashboards. Managers will become attached to those dashboards. The team will begin optimizing behavior to make the dashboards look good rather than to actually improve operations. This is Goodhart's Law applied to manufacturing: when a measure becomes a target, it ceases to be a good measure. Protect the signal quality of the event data by periodically auditing whether declared event data matches observable reality on the production floor.</p>
+
+  <h3>Anti-pattern 3 — The Schema Expansion Spiral</h3>
+  <p>The event taxonomy will feel incomplete the moment it is deployed. Every edge case generates a request for a new event type or a new payload field. Teams will discover that the clarification type vocabulary doesn't include their specific situation. Designers will ask for more granular delay reason codes. This is natural and expected — and it is also dangerous if it is not governed. <strong>Establish a schema governance process</strong>: new event types require a formal proposal, a review of whether an existing type can be extended via payload, and a consensus decision. Uncontrolled taxonomy growth produces a schema that cannot be queried coherently after six months.</p>
+
+  <h3>Anti-pattern 4 — The Dual-Entry Death Spiral</h3>
+  <p>If the system requires workers to record the same information in both Sheets and the new system — even temporarily during migration — it will fail. Workers will choose one and abandon the other, and it will not be the new system they choose. Design every data entry point so that information entered in the new system <em>automatically propagates</em> to Sheets via the API, eliminating the need for dual entry. The moment a worker perceives the new system as extra work on top of existing work rather than a replacement for existing work, adoption stalls permanently.</p>
+
+  <h3>Anti-pattern 5 — The Unowned Event</h3>
+  <p>Every event in the taxonomy must have a clearly designated human owner — a specific role whose responsibility it is to trigger that event. Events without an owner are never triggered, or they are triggered inconsistently by whoever happens to be paying attention. Map every event type to a role responsibility and communicate that mapping explicitly in onboarding. Make the event declaration the official, legitimate way to communicate the transition — replace the informal WhatsApp message, do not add to it.</p>
+
+  <h3>Anti-pattern 6 — The Data Purity Perfectionism Trap</h3>
+  <div class="box box-red">
+    <div class="box-title">⛔ Warning — Perfect is the Enemy of Operational</div>
+    <p>There will be missing events, incorrectly tagged clarification types, delay reasons that don't fit the vocabulary, and system-injected messages that arrive after manual WhatsApp messages that made them redundant. Accept this. Operational data in manufacturing environments is always imperfect. The question is not whether the data is perfect but whether it is directionally accurate enough to improve decisions. Shoot for 80% structured event coverage in the first three months and celebrate that as a success. Chasing 100% in Month 1 produces a system so strict that it is abandoned.</p>
+  </div>
+
+  <h3>Anti-pattern 7 — The Disconnected Dashboard</h3>
+  <p>A dashboard built by someone who is not embedded in the daily operational workflow of PPC will invariably measure the wrong things, use the wrong granularity, and display data in formats that do not match how PPC team members think. <strong>PPC team members must co-design the control tower dashboard.</strong> Not as stakeholders who are shown a prototype and asked for feedback, but as active co-creators who specify what question each panel is supposed to answer and validate whether the displayed answer is correct against their ground-truth knowledge of current orders.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SECTION 10 — AI AGENT ECOSYSTEM
+══════════════════════════════════════════ -->
+<div class="section" id="s10">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <h2>Architecture for the AI Agent Ecosystem</h2>
+  </div>
+
+  <p>The AI agent ecosystem is the terminal state of the Horizon 3 architecture. It is worth designing for explicitly now — not to build it yet, but to ensure that the event backbone and data structures being built in Horizon 1 will be the right foundation for it when the time comes. An event store built without the AI ecosystem in mind will require expensive retrofitting at exactly the wrong moment.</p>
+
+  <h3>Agent design principles for manufacturing environments</h3>
+  <p><strong>Agents should augment, not automate, decision-making.</strong> In manufacturing environments with high-stakes physical outcomes, fully automated AI decisions without human confirmation carry unacceptable risk in the early adoption period. The correct posture for Horizon 3 agents is <em>recommendation with transparency</em>: the agent surfaces a recommendation, explains the evidence behind it from the event store, and presents the action to a human for confirmation. Automation of low-stakes, high-frequency, unambiguous decisions can come later after the recommendation accuracy has been validated in production.</p>
+  <p><strong>Agents must be explainable to the people they assist.</strong> A designer who is told "this order is likely to be delayed" by an AI needs to understand why the AI thinks so — not because they distrust AI, but because they need that information to take effective action. Every agent recommendation must include a human-readable explanation that references specific events in the order's history. "This order has a 73% delay probability based on three open CLARIFICATION_REQUESTED events that have been unresolved for more than 24 hours" is actionable. "High delay risk" is not.</p>
+
+  <h3>Recommended agent roster for Horizon 3</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🔮</div>
+      <div class="card-title">Delay Prediction Agent</div>
+      <div class="card-desc">Trained on historical event sequences. Identifies early patterns that preceded delays in past orders. Fires when current order pattern matches delay signatures. References the specific pattern matches in its recommendation.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Clarification Pattern Agent</div>
+      <div class="card-desc">Identifies systemic clarification loop sources. "Orders from Sales Rep X have 3x the average SALES_MISSING_INFO events." Escalates to management with aggregated evidence rather than individual flagging.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title">Capacity Allocation Agent</div>
+      <div class="card-desc">Monitors daily capacity declarations against assignment load. Flags overallocation before it causes delays. Recommends reassignment when a designer's queue is at risk based on declared capacity and historical completion rates.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🗓️</div>
+      <div class="card-title">Schedule Risk Agent</div>
+      <div class="card-desc">Propagates delay risks forward in the production schedule. "If this design stage delay holds, three downstream orders will miss their committed installation dates." Presents the cascade impact to PPC for prioritization decisions.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">💡</div>
+      <div class="card-title">Knowledge Extraction Agent</div>
+      <div class="card-desc">Mines the chat and event history of completed orders to extract reusable operational knowledge. "Orders with site ceilings below 2.4m require a DIM_QUERY clarification in 80% of cases — propose adding ceiling height as a mandatory sales briefing field."</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚨</div>
+      <div class="card-title">Escalation Intelligence Agent</div>
+      <div class="card-desc">Monitors unresolved blockers and decides when human escalation is appropriate based on elapsed time, downstream impact, and historical resolution patterns. Drafts escalation messages for human review.</div>
+    </div>
+  </div>
+
+  <h3>Agent infrastructure requirements</h3>
+  <p><strong>The event store as training corpus.</strong> Each agent is trained on or operates against the event store. The quality of the event data directly determines the quality of agent recommendations. This is the strongest argument for investing in event data quality from Day 1 of Horizon 1 — every correctly tagged event is a training example that will improve agent performance eighteen months from now.</p>
+  <p><strong>Agent-to-human communication via the existing chat interface.</strong> Agents should not have a separate interface. Their recommendations should appear as structured system messages in the order's chat thread, tagged with an <code>agent_id</code> discriminator so they are visually distinct but contextually integrated. This keeps the chat thread as the single operational surface and prevents the proliferation of notification channels that characterizes failing digital operations.</p>
+  <p><strong>Agent feedback loop.</strong> When a human accepts or overrides an agent recommendation, that decision should be recorded as an event (<code>AGENT_RECOMMENDATION_ACCEPTED</code> / <code>AGENT_RECOMMENDATION_OVERRIDDEN</code> with a reason code). This is the mechanism by which agents learn from human judgment over time. Without this feedback loop, agents cannot improve and their recommendations will degrade in relevance as the operational context evolves.</p>
+
+  <div class="schema-block">
+<span class="cmt">-- Agent recommendation events — added to order_events like any other event</span>
+<span class="cmt">-- event_type: 'AGENT_RECOMMENDATION'</span>
+<span class="cmt">-- payload structure:</span>
+{
+  <span class="hl">"agent_id"</span>:          <span class="str">"delay_prediction_v1"</span>,
+  <span class="hl">"recommendation"</span>:    <span class="str">"High delay risk — recommend priority escalation"</span>,
+  <span class="hl">"confidence"</span>:        <span class="val">0.81</span>,
+  <span class="hl">"evidence_event_ids"</span>: [<span class="str">"evt_abc"</span>, <span class="str">"evt_xyz"</span>],
+  <span class="hl">"explanation"</span>:       <span class="str">"3 unresolved clarification events &gt;24h, matching delay pattern from 14 historical orders"</span>,
+  <span class="hl">"suggested_action"</span>:  <span class="str">"Escalate SALES_MISSING_INFO to Sales Manager"</span>,
+  <span class="hl">"action_target_id"</span>:  <span class="str">"user_sales_mgr_id"</span>,
+  <span class="hl">"status"</span>:            <span class="str">"PENDING_HUMAN_REVIEW"</span>  <span class="cmt">// updated when human responds</span>
+}
+  </div>
+
+  <div class="box box-lime">
+    <div class="box-title">✓ Strategic Note — The Compounding Return on Event Data Quality</div>
+    <p>Every correctly captured event in Horizon 1 is not just operational intelligence — it is future training data. An event store with 12 months of clean, semantically accurate, causally attributed events is worth more to the AI ecosystem than any amount of compute budget or model sophistication. The competitive moat Alea is building is not the AI agents themselves — those are available to any company with a cloud budget. The moat is the operational event history that makes those agents meaningfully accurate for modular kitchen manufacturing specifically. That moat starts being built on Day 1 of the pilot. Invest in data quality accordingly.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<hr class="section-rule"/>
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;padding:8px 0 0;">
+  <div style="font-family:var(--ff-mono);font-size:10.5px;color:var(--ink-4);">
+    <strong style="color:var(--ink-3);">Alea Modular Kitchen</strong> · MEV Layer Strategic Analysis<br/>
+    Manufacturing Execution Visibility → Execution Platform → AI-Driven System
+  </div>
+  <div style="font-family:var(--ff-mono);font-size:10px;color:var(--ink-4);text-align:right;">
+    Architecture Horizon: 36 months<br/>
+    Sections: 10 · Confidential
+  </div>
+</div>
+
+</div><!-- /page-wrap -->
+</body>
+</html>
